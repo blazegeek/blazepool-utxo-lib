@@ -21,7 +21,8 @@ const coins = {
   BTG: 'btg',
   LTC: 'ltc',
   ZEC: 'zec',
-  DASH: 'dash'
+  DASH: 'dash',
+  GEEK: 'geek'
 }
 
 function getDefaultBip32Mainnet () {
@@ -158,6 +159,24 @@ module.exports = {
     wif: 0xef,
     coin: coins.LTC
   },
+  // https://github.com/geekcash/geek/blob/master/src/validation.cpp
+  // https://github.com/geekcash/geek/blob/master/src/chainparams.cpp
+  geek: {
+    messagePrefix: 'GeekCash Signed Message:\n',
+    bip32: getDefaultBip32Mainnet(),
+    pubKeyHash: 0x26,
+    scriptHash: 0x13,
+    wif: 0xcc,
+    coin: coins.DASH
+  },
+  geekTest: {
+    messagePrefix: 'GeekCash Signed Message:\n',
+    bip32: getDefaultBip32Testnet(),
+    pubKeyHash: 0x26,
+    scriptHash: 0x13,
+    wif: 0xcc,
+    coin: coins.DASH
+  },
 
   // https://github.com/zcash/zcash/blob/master/src/validation.cpp
   // https://github.com/zcash/zcash/blob/master/src/chainparams.cpp
@@ -196,3 +215,4 @@ module.exports = {
     coin: coins.ZEC
   }
 }
+
