@@ -44,6 +44,10 @@ function getMainnet (network) {
     case networks.dash:
     case networks.dashTest:
       return networks.dash
+      
+    case networks.geek:
+    case networks.geekTest:
+      return networks.geek
 
     case networks.litecoin:
     case networks.litecoinTest:
@@ -157,6 +161,14 @@ function isDash (network) {
 
 /**
  * @param {Network} network
+ * @returns {boolean} true iff network is dash or dashTest
+ */
+function isGeek (network) {
+  return getMainnet(network) === networks.geek
+}
+
+/**
+ * @param {Network} network
  * @returns {boolean} true iff network is litecoin or litecoinTest
  */
 function isLitecoin (network) {
@@ -181,6 +193,7 @@ const isValidNetwork = typeforce.oneOf(
   isBitcoinGold,
   isBitcoinSV,
   isDash,
+  isGeek,
   isLitecoin,
   isZcash
 )
@@ -191,6 +204,7 @@ module.exports = {
   BSV: networks.bitcoinsv.coin,
   BTG: networks.bitcoingold.coin,
   DASH: networks.dash.coin,
+  GEEK: networks.geek.coin,
   LTC: networks.litecoin.coin,
   ZEC: networks.zcash.coin,
 
@@ -208,6 +222,7 @@ module.exports = {
   isBitcoinGold,
   isBitcoinSV,
   isDash,
+  isGeek,
   isLitecoin,
   isZcash,
 
