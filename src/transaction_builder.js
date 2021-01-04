@@ -1,22 +1,22 @@
-var Buffer = require('safe-buffer').Buffer;
-var baddress = require('./address');
-var bcrypto = require('./crypto');
-var bscript = require('./script');
-var btemplates = require('./templates');
-var coins = require('./coins');
-var networks = require('./networks');
-var ops = require('bitcoin-ops');
-var typeforce = require('typeforce');
-var types = require('./types');
+var Buffer = require("safe-buffer").Buffer;
+var baddress = require("./address");
+var bcrypto = require("./crypto");
+var bscript = require("./script");
+var btemplates = require("./templates");
+var coins = require("./coins");
+var networks = require("./networks");
+var ops = require("bitcoin-ops");
+var typeforce = require("typeforce");
+var types = require("./types");
 var scriptTypes = btemplates.types;
 var SIGNABLE = [btemplates.types.P2PKH, btemplates.types.P2PK, btemplates.types.MULTISIG];
 var P2SH = SIGNABLE.concat([btemplates.types.P2WPKH, btemplates.types.P2WSH]);
 
-var ECPair = require('./ecpair');
-var ECSignature = require('./ecsignature');
-var Transaction = require('./transaction');
+var ECPair = require("./ecpair");
+var ECSignature = require("./ecsignature");
+var Transaction = require("./transaction");
 
-var debug = require('debug')('bitgo:utxolib:txbuilder');
+var debug = require("debug")("bitgo:utxolib:txbuilder");
 
 function supportedType (type) {
   return SIGNABLE.indexOf(type) !== -1;
@@ -31,7 +31,7 @@ function extractChunks (type, chunks, script) {
   var signatures = [];
   switch (type) {
     case scriptTypes.P2PKH:
-      // if (redeemScript) throw new Error('Nonstandard... P2SH(P2PKH)');
+      // if (redeemScript) throw new Error("Nonstandard... P2SH(P2PKH)");
       pubKeys = chunks.slice(1);
       signatures = chunks.slice(0, 1);
       break;
@@ -96,21 +96,21 @@ function expandInput (scriptSig, witnessStack) {
       prevOutScript = btemplates.witnessScriptHash.output.encode(bcrypto.sha256(witnessScript));
       prevOutType = scriptTypes.P2WSH;
       if (redeemScript !== undefined) {
-        throw new Error('Redeem script given when unnecessary');
+        throw new Error("Redeem script given when unnecessary");
       }
       // bare witness
     } else {
       if (!redeemScript) {
-        throw new Error('No redeemScript provided for P2WSH, but scriptSig non-empty');
+        throw new Error("No redeemScript provided for P2WSH, but scriptSig non-empty");
       }
       witnessProgram = btemplates.witnessScriptHash.output.encode(bcrypto.sha256(witnessScript));
       if (!redeemScript.equals(witnessProgram)) {
-        throw new Error('Redeem script didn\'t match witnessScript');
+        throw new Error("Redeem script didn't match witnessScript");
       }
     }
 
     if (!supportedType(btemplates.classifyOutput(witnessScript))) {
-      throw new Error('unsupported witness script');
+      throw new Error("unsupported witness script");
     }
 
     script = witnessScript;
@@ -123,16 +123,16 @@ function expandInput (scriptSig, witnessStack) {
     if (scriptSig.length === 0) {
       prevOutScript = btemplates.witnessPubKeyHash.output.encode(keyHash);
       prevOutType = scriptTypes.P2WPKH;
-      if (typeof redeemScript !== 'undefined') {
-        throw new Error('Redeem script given when unnecessary');
+      if (typeof redeemScript !== "undefined") {
+        throw new Error("Redeem script given when unnecessary");
       }
     } else {
       if (!redeemScript) {
-        throw new Error('No redeemScript provided for P2WPKH, but scriptSig wasn\'t empty');
+        throw new Error("No redeemScript provided for P2WPKH, but scriptSig wasn't empty");
       }
       witnessProgram = btemplates.witnessPubKeyHash.output.encode(keyHash);
       if (!redeemScript.equals(witnessProgram)) {
-        throw new Error('Redeem script did not have the right witness program');
+        throw new Error("Redeem script did not have the right witness program");
       }
     }
 
@@ -140,7 +140,7 @@ function expandInput (scriptSig, witnessStack) {
     chunks = witnessStack;
   } else if (redeemScript) {
     if (!supportedP2SHType(redeemScriptType)) {
-      throw new Error('Bad redeemscript!');
+      throw new Error("Bad redeemscript!");
     }
 
     script = redeemScript;
@@ -282,19 +282,19 @@ function expandOutput (script, scriptType, ourPubKey) {
 
 function checkP2SHInput (input, redeemScriptHash) {
   if (input.prevOutType) {
-    if (input.prevOutType !== scriptTypes.P2SH) throw new Error('PrevOutScript must be P2SH');
+    if (input.prevOutType !== scriptTypes.P2SH) throw new Error("PrevOutScript must be P2SH");
 
     var prevOutScriptScriptHash = bscript.decompile(input.prevOutScript)[1];
-    if (!prevOutScriptScriptHash.equals(redeemScriptHash)) throw new Error('Inconsistent hash160(RedeemScript)');
+    if (!prevOutScriptScriptHash.equals(redeemScriptHash)) throw new Error("Inconsistent hash160(RedeemScript)");
   }
 }
 
 function checkP2WSHInput (input, witnessScriptHash) {
   if (input.prevOutType) {
-    if (input.prevOutType !== scriptTypes.P2WSH) throw new Error('PrevOutScript must be P2WSH');
+    if (input.prevOutType !== scriptTypes.P2WSH) throw new Error("PrevOutScript must be P2WSH");
 
     var scriptHash = bscript.decompile(input.prevOutScript)[1];
-    if (!scriptHash.equals(witnessScriptHash)) throw new Error('Inconsistent sha25(WitnessScript)');
+    if (!scriptHash.equals(witnessScriptHash)) throw new Error("Inconsistent sha25(WitnessScript)");
   }
 }
 
@@ -320,7 +320,7 @@ function prepareInput (input, kpPubKey, redeemScript, witnessValue, witnessScrip
     witnessScriptHash = bcrypto.sha256(witnessScript);
     checkP2SHInput(input, redeemScriptHash);
 
-    if (!redeemScript.equals(btemplates.witnessScriptHash.output.encode(witnessScriptHash))) throw new Error('Witness script inconsistent with redeem script');
+    if (!redeemScript.equals(btemplates.witnessScriptHash.output.encode(witnessScriptHash))) throw new Error("Witness script inconsistent with redeem script");
 
     expanded = expandOutput(witnessScript, undefined, kpPubKey);
     if (!expanded.pubKeys) throw new Error('WitnessScript not supported "' + bscript.toASM(redeemScript) + '"');
@@ -360,7 +360,7 @@ function prepareInput (input, kpPubKey, redeemScript, witnessValue, witnessScrip
     // embedded scripts are not possible without a redeemScript
     if (input.prevOutType === scriptTypes.P2SH ||
       input.prevOutType === scriptTypes.P2WSH) {
-      throw new Error('PrevOutScript is ' + input.prevOutType + ', requires redeemScript');
+      throw new Error("PrevOutScript is " + input.prevOutType + ", requires redeemScript");
     }
 
     prevOutType = input.prevOutType;
@@ -422,10 +422,10 @@ function buildStack (type, signatures, pubKeys, allowIncomplete) {
       return btemplates.multisig.input.encodeStack(signatures);
     }
   } else {
-    throw new Error('Not yet supported');
+    throw new Error("Not yet supported");
   }
 
-  if (!allowIncomplete) throw new Error('Not enough signatures provided');
+  if (!allowIncomplete) throw new Error("Not enough signatures provided");
   return [];
 }
 
@@ -443,7 +443,7 @@ function buildInput (input, allowIncomplete) {
     // We can remove this error later when we have a guarantee prepareInput
     // rejects unsignable scripts - it MUST be signable at this point.
     if (!allowIncomplete && !supportedP2SHType(input.redeemScriptType)) {
-      throw new Error('Impossible to sign this type');
+      throw new Error("Impossible to sign this type");
     }
 
     if (supportedType(input.redeemScriptType)) {
@@ -466,7 +466,7 @@ function buildInput (input, allowIncomplete) {
     case btemplates.types.P2WSH:
       // We can remove this check later
       if (!allowIncomplete && !supportedType(input.witnessScriptType)) {
-        throw new Error('Impossible to sign this type');
+        throw new Error("Impossible to sign this type");
       }
 
       if (supportedType(input.witnessScriptType)) {
@@ -510,7 +510,7 @@ TransactionBuilder.prototype.setLockTime = function (locktime) {
 
     return input.signatures.some(function (s) { return s; });
   })) {
-    throw new Error('No, this would invalidate signatures');
+    throw new Error("No, this would invalidate signatures");
   }
 
   this.tx.locktime = locktime;
@@ -521,7 +521,7 @@ TransactionBuilder.prototype.setVersion = function (version, overwinter = true) 
 
   if (coins.isZcash(this.network)) {
     if (!this.network.consensusBranchId.hasOwnProperty(this.tx.version)) {
-      throw new Error('Unsupported Zcash transaction');
+      throw new Error("Unsupported Zcash transaction");
     }
     this.tx.overwintered = (overwinter ? 1 : 0);
   }
@@ -530,8 +530,8 @@ TransactionBuilder.prototype.setVersion = function (version, overwinter = true) 
 
 TransactionBuilder.prototype.setVersionGroupId = function (versionGroupId) {
   if (!(coins.isZcash(this.network) && this.tx.isOverwinterCompatible())) {
-    throw new Error('expiryHeight can only be set for Zcash starting at overwinter version. Current network coin: ' +
-      this.network.coin + ', version: ' + this.tx.version);
+    throw new Error("expiryHeight can only be set for Zcash starting at overwinter version. Current network coin: " +
+      this.network.coin + ", version: " + this.tx.version);
   }
   typeforce(types.UInt32, versionGroupId);
   this.tx.versionGroupId = versionGroupId;
@@ -539,8 +539,8 @@ TransactionBuilder.prototype.setVersionGroupId = function (versionGroupId) {
 
 TransactionBuilder.prototype.setExpiryHeight = function (expiryHeight) {
   if (!(coins.isZcash(this.network) && this.tx.isOverwinterCompatible())) {
-    throw new Error('expiryHeight can only be set for Zcash starting at overwinter version. Current network coin: ' +
-      this.network.coin + ', version: ' + this.tx.version);
+    throw new Error("expiryHeight can only be set for Zcash starting at overwinter version. Current network coin: " +
+      this.network.coin + ", version: " + this.tx.version);
   }
   typeforce(types.UInt32, expiryHeight);
   this.tx.expiryHeight = expiryHeight;
@@ -548,8 +548,8 @@ TransactionBuilder.prototype.setExpiryHeight = function (expiryHeight) {
 
 TransactionBuilder.prototype.setJoinSplits = function (transaction) {
   if (!(coins.isZcash(this.network) && this.tx.supportsJoinSplits())) {
-    throw new Error('joinsplits can only be set for Zcash starting at version 2. Current network coin: ' +
-      this.network.coin + ', version: ' + this.tx.version);
+    throw new Error("joinsplits can only be set for Zcash starting at version 2. Current network coin: " +
+      this.network.coin + ", version: " + this.tx.version);
   }
   if (transaction && transaction.joinsplits) {
     this.tx.joinsplits = transaction.joinsplits.map(function (txJoinsplit) {
@@ -571,7 +571,7 @@ TransactionBuilder.prototype.setJoinSplits = function (transaction) {
     this.tx.joinsplitSig = transaction.joinsplitSig;
     return;
   }
-  throw new Error('Invalid transaction with joinsplits');
+  throw new Error("Invalid transaction with joinsplits");
 };
 
 TransactionBuilder.fromTransaction = function (transaction, network) {
@@ -579,7 +579,7 @@ TransactionBuilder.fromTransaction = function (transaction, network) {
   var txb = new TransactionBuilder(txbNetwork);
 
   if (txb.network.coin !== transaction.network.coin) {
-    throw new Error('This transaction is incompatible with the transaction builder');
+    throw new Error("This transaction is incompatible with the transaction builder");
   }
 
   // Copy transaction fields
@@ -636,15 +636,15 @@ TransactionBuilder.fromTransaction = function (transaction, network) {
 
 TransactionBuilder.prototype.addInput = function (txHash, vout, sequence, prevOutScript) {
   if (!this.__canModifyInputs()) {
-    throw new Error('No, this would invalidate signatures');
+    throw new Error("No, this would invalidate signatures");
   }
 
   var value;
 
   // is it a hex string?
-  if (typeof txHash === 'string') {
+  if (typeof txHash === "string") {
     // transaction hashs's are displayed in reverse order, un-reverse it
-    txHash = Buffer.from(txHash, 'hex').reverse();
+    txHash = Buffer.from(txHash, "hex").reverse();
 
   // is it a Transaction object?
   } else if (txHash instanceof Transaction) {
@@ -681,12 +681,12 @@ TransactionBuilder.prototype.__addInputUnsafe = function (txHash, vout, options)
       signScript: options.scriptSig,
     };
     this.inputs[vin] = input;
-    //throw new Error('coinbase inputs not supported')
+    //throw new Error("coinbase inputs not supported")
     return 0;
   }
 
-  var prevTxOut = txHash.toString('hex') + ':' + vout;
-  if (this.prevTxMap[prevTxOut] !== undefined) throw new Error('Duplicate TxOut: ' + prevTxOut);
+  var prevTxOut = txHash.toString("hex") + ":" + vout;
+  if (this.prevTxMap[prevTxOut] !== undefined) throw new Error("Duplicate TxOut: " + prevTxOut);
 
   // derive what we can from the scriptSig
   if (options.script !== undefined) {
@@ -725,11 +725,11 @@ TransactionBuilder.prototype.__addInputUnsafe = function (txHash, vout, options)
 
 TransactionBuilder.prototype.addOutput = function (scriptPubKey, value) {
   if (!this.__canModifyOutputs()) {
-    throw new Error('No, this would invalidate signatures');
+    throw new Error("No, this would invalidate signatures");
   }
 
   // Attempt to get a script if it's a base58 address string
-  if (typeof scriptPubKey === 'string') {
+  if (typeof scriptPubKey === "string") {
     scriptPubKey = baddress.toOutputScript(scriptPubKey, this.network);
   }
 
@@ -745,8 +745,8 @@ TransactionBuilder.prototype.buildIncomplete = function () {
 
 TransactionBuilder.prototype.__build = function (allowIncomplete) {
   if (!allowIncomplete) {
-    if (!this.tx.ins.length) throw new Error('Transaction has no inputs');
-    if (!this.tx.outs.length) throw new Error('Transaction has no outputs');
+    if (!this.tx.ins.length) throw new Error("Transaction has no inputs");
+    if (!this.tx.outs.length) throw new Error("Transaction has no outputs");
   }
 
   var tx = this.tx.clone();
@@ -758,13 +758,13 @@ TransactionBuilder.prototype.__build = function (allowIncomplete) {
   // Create script signatures from inputs
   this.inputs.forEach(function (input, i) {
     var scriptType = input.witnessScriptType || input.redeemScriptType || input.prevOutType;
-    if (!scriptType && !allowIncomplete) throw new Error('Transaction is not complete');
+    if (!scriptType && !allowIncomplete) throw new Error("Transaction is not complete");
     var result = buildInput(input, allowIncomplete);
 
     // skip if no result
     if (!allowIncomplete) {
       if (!supportedType(result.type) && result.type !== btemplates.types.P2WPKH) {
-        throw new Error(result.type + ' not supported');
+        throw new Error(result.type + " not supported");
       }
     }
 
@@ -775,7 +775,7 @@ TransactionBuilder.prototype.__build = function (allowIncomplete) {
   if (!allowIncomplete) {
     // do not rely on this, its merely a last resort
     if (this.__overMaximumFees(tx.virtualSize())) {
-      throw new Error('Transaction has absurd fees');
+      throw new Error("Transaction has absurd fees");
     }
   }
 
@@ -796,12 +796,12 @@ function canSign (input) {
 }
 
 TransactionBuilder.prototype.sign = function (vin, keyPair, redeemScript, hashType, witnessValue, witnessScript) {
-  debug('Signing transaction: (input: %d, hashType: %d, witnessVal: %s, witnessScript: %j)', vin, hashType, witnessValue, witnessScript);
-  debug('Transaction Builder network: %j', this.network);
+  debug("Signing transaction: (input: %d, hashType: %d, witnessVal: %s, witnessScript: %j)", vin, hashType, witnessValue, witnessScript);
+  debug("Transaction Builder network: %j", this.network);
 
   // TODO: remove keyPair.network matching in 4.0.0
-  if (keyPair.network && keyPair.network !== this.network) throw new TypeError('Inconsistent network');
-  if (!this.inputs[vin]) throw new Error('No input at index: ' + vin);
+  if (keyPair.network && keyPair.network !== this.network) throw new TypeError("Inconsistent network");
+  if (!this.inputs[vin]) throw new Error("No input at index: " + vin);
   hashType = hashType || Transaction.SIGHASH_ALL;
 
   var input = this.inputs[vin];
@@ -810,61 +810,61 @@ TransactionBuilder.prototype.sign = function (vin, keyPair, redeemScript, hashTy
   if (input.redeemScript !== undefined &&
       redeemScript &&
       !input.redeemScript.equals(redeemScript)) {
-    throw new Error('Inconsistent redeemScript');
+    throw new Error("Inconsistent redeemScript");
   }
 
   var kpPubKey = keyPair.publicKey || keyPair.getPublicKeyBuffer();
   if (!canSign(input)) {
     if (witnessValue !== undefined) {
-      if (input.value !== undefined && input.value !== witnessValue) throw new Error('Input didn\'t match witnessValue');
+      if (input.value !== undefined && input.value !== witnessValue) throw new Error("Input didn't match witnessValue");
       typeforce(types.Satoshi, witnessValue);
       input.value = witnessValue;
     }
 
-    debug('Preparing input %d for signing', vin);
+    debug("Preparing input %d for signing", vin);
 
     if (!canSign(input)) prepareInput(input, kpPubKey, redeemScript, witnessValue, witnessScript);
-    if (!canSign(input)) throw Error(input.prevOutType + ' not supported');
+    if (!canSign(input)) throw Error(input.prevOutType + " not supported");
   }
 
   // ready to sign
   var signatureHash;
   if (coins.isBitcoinGold(this.network)) {
     signatureHash = this.tx.hashForGoldSignature(vin, input.signScript, witnessValue, hashType, input.witness);
-    debug('Calculated BTG sighash (%s)', signatureHash.toString('hex'));
+    debug("Calculated BTG sighash (%s)", signatureHash.toString("hex"));
   } else if (coins.isBitcoinCash(this.network) || coins.isBitcoinSV(this.network)) {
     signatureHash = this.tx.hashForCashSignature(vin, input.signScript, witnessValue, hashType);
-    debug('Calculated BCH sighash (%s)', signatureHash.toString('hex'));
+    debug("Calculated BCH sighash (%s)", signatureHash.toString("hex"));
   } else if (coins.isZcash(this.network)) {
     signatureHash = this.tx.hashForZcashSignature(vin, input.signScript, witnessValue, hashType);
-    debug('Calculated ZEC sighash (%s)', signatureHash.toString('hex'));
+    debug("Calculated ZEC sighash (%s)", signatureHash.toString("hex"));
   } else {
     if (input.witness) {
       signatureHash = this.tx.hashForWitnessV0(vin, input.signScript, witnessValue, hashType);
-      debug('Calculated witnessv0 sighash (%s)', signatureHash.toString('hex'));
+      debug("Calculated witnessv0 sighash (%s)", signatureHash.toString("hex"));
     } else {
       signatureHash = this.tx.hashForSignature(vin, input.signScript, hashType);
-      debug('Calculated sighash (%s)', signatureHash.toString('hex'));
+      debug("Calculated sighash (%s)", signatureHash.toString("hex"));
     }
   }
 
   // enforce in order signing of public keys
   var signed = input.pubKeys.some(function (pubKey, i) {
     if (!kpPubKey.equals(pubKey)) return false;
-    if (input.signatures[i]) throw new Error('Signature already exists');
+    if (input.signatures[i]) throw new Error("Signature already exists");
     if (kpPubKey.length !== 33 &&
-      input.signType === scriptTypes.P2WPKH) throw new Error('BIP143 rejects uncompressed public keys in P2WPKH or P2WSH');
+      input.signType === scriptTypes.P2WPKH) throw new Error("BIP143 rejects uncompressed public keys in P2WPKH or P2WSH");
 
     var signature = keyPair.sign(signatureHash);
     if (Buffer.isBuffer(signature)) signature = ECSignature.fromRSBuffer(signature);
 
-    debug('Produced signature (r: %s, s: %s)', signature.r, signature.s);
+    debug("Produced signature (r: %s, s: %s)", signature.r, signature.s);
 
     input.signatures[i] = signature.toScriptSignature(hashType);
     return true;
   });
 
-  if (!signed) throw new Error('Key pair cannot sign for this input');
+  if (!signed) throw new Error("Key pair cannot sign for this input");
 };
 
 function signatureHashType (buffer) {
