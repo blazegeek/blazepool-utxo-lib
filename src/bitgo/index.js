@@ -1,3 +1,3 @@
 module.exports = {
-  keyutil: require('./keyutil')
-}
+  keyutil: require("./keyutil")
+};
