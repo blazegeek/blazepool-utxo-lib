@@ -318,7 +318,7 @@ HDNode.prototype.derivePath = function (path, cache) {
       cache = cacheObject.next;
       return cacheObject.node;
     }
-    if (indexStr.slice(-1) === "\"") {
+    if (indexStr.slice(-1) === "'") {
       index = parseInt(indexStr.slice(0, -1), 10);
       cacheObject.node = prevHd.deriveHardened(index);
     } else {
