@@ -1,7 +1,5 @@
 /*
-
 The values for the various fork coins can be found in these files:
-
 property       filename             varname                           notes
 ------------------------------------------------------------------------------------------------------------------------
 messagePrefix  src/validation.cpp   strMessageMagic                   Format `${CoinName} Signed Message`
@@ -11,7 +9,6 @@ bip32.private  src/chainparams.cpp  base58Prefixes[EXT_SECRET_KEY]    Mainnets h
 pubKeyHash     src/chainparams.cpp  base58Prefixes[PUBKEY_ADDRESS]
 scriptHash     src/chainparams.cpp  base58Prefixes[SCRIPT_ADDRESS]
 wif            src/chainparams.cpp  base58Prefixes[SECRET_KEY]        Testnets have same value
-
 */
 
 const coins = {
@@ -23,7 +20,7 @@ const coins = {
   ZEC: 'zec',
   DASH: 'dash',
   GEEK: 'geek'
-}
+};
 
 function getDefaultBip32Mainnet () {
   return {
@@ -31,7 +28,7 @@ function getDefaultBip32Mainnet () {
     public: 0x0488b21e,
     // base58 'xprv'
     private: 0x0488ade4
-  }
+  };
 }
 
 function getDefaultBip32Testnet () {
@@ -40,7 +37,7 @@ function getDefaultBip32Testnet () {
     public: 0x043587cf,
     // base58 'tprv'
     private: 0x04358394
-  }
+  };
 }
 
 module.exports = {
@@ -214,5 +211,4 @@ module.exports = {
     },
     coin: coins.ZEC
   }
-}
-
+};
