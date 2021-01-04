@@ -12,30 +12,30 @@ wif            src/chainparams.cpp  base58Prefixes[SECRET_KEY]        Testnets h
 */
 
 const coins = {
-  BCH: 'bch',
-  BSV: 'bsv',
-  BTC: 'btc',
-  BTG: 'btg',
-  LTC: 'ltc',
-  ZEC: 'zec',
-  DASH: 'dash',
-  GEEK: 'geek'
+  BCH: "bch",
+  BSV: "bsv",
+  BTC: "btc",
+  BTG: "btg",
+  LTC: "ltc",
+  ZEC: "zec",
+  DASH: "dash",
+  GEEK: "geek"
 };
 
 function getDefaultBip32Mainnet () {
   return {
-    // base58 'xpub'
+    // base58 "xpub"
     public: 0x0488b21e,
-    // base58 'xprv'
+    // base58 "xprv"
     private: 0x0488ade4
   };
 }
 
 function getDefaultBip32Testnet () {
   return {
-    // base58 'tpub'
+    // base58 "tpub"
     public: 0x043587cf,
-    // base58 'tprv'
+    // base58 "tprv"
     private: 0x04358394
   };
 }
@@ -45,8 +45,8 @@ module.exports = {
   // https://github.com/bitcoin/bitcoin/blob/master/src/validation.cpp
   // https://github.com/bitcoin/bitcoin/blob/master/src/chainparams.cpp
   bitcoin: {
-    messagePrefix: '\x18Bitcoin Signed Message:\n',
-    bech32: 'bc',
+    messagePrefix: "\x18Bitcoin Signed Message:\n",
+    bech32: "bc",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x00,
     scriptHash: 0x05,
@@ -54,8 +54,8 @@ module.exports = {
     coin: coins.BTC
   },
   testnet: {
-    messagePrefix: '\x18Bitcoin Signed Message:\n',
-    bech32: 'tb',
+    messagePrefix: "\x18Bitcoin Signed Message:\n",
+    bech32: "tb",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x6f,
     scriptHash: 0xc4,
@@ -66,7 +66,7 @@ module.exports = {
   // https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/validation.cpp
   // https://github.com/Bitcoin-ABC/bitcoin-abc/blob/master/src/chainparams.cpp
   bitcoincash: {
-    messagePrefix: '\x18Bitcoin Signed Message:\n',
+    messagePrefix: "\x18Bitcoin Signed Message:\n",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x00,
     scriptHash: 0x05,
@@ -75,7 +75,7 @@ module.exports = {
     forkId: 0x00
   },
   bitcoincashTestnet: {
-    messagePrefix: '\x18Bitcoin Signed Message:\n',
+    messagePrefix: "\x18Bitcoin Signed Message:\n",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x6f,
     scriptHash: 0xc4,
@@ -86,8 +86,8 @@ module.exports = {
   // https://github.com/BTCGPU/BTCGPU/blob/master/src/validation.cpp
   // https://github.com/BTCGPU/BTCGPU/blob/master/src/chainparams.cpp
   bitcoingold: {
-    messagePrefix: '\x18Bitcoin Gold Signed Message:\n',
-    bech32: 'btg',
+    messagePrefix: "\x18Bitcoin Gold Signed Message:\n",
+    bech32: "btg",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x26,
     scriptHash: 0x17,
@@ -100,7 +100,7 @@ module.exports = {
   // https://github.com/bitcoin-sv/bitcoin-sv/blob/master/src/validation.cpp
   // https://github.com/bitcoin-sv/bitcoin-sv/blob/master/src/chainparams.cpp
   bitcoinsv: {
-    messagePrefix: '\x18Bitcoin Signed Message:\n',
+    messagePrefix: "\x18Bitcoin Signed Message:\n",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x00,
     scriptHash: 0x05,
@@ -109,7 +109,7 @@ module.exports = {
     forkId: 0x00
   },
   bitcoinsvTestnet: {
-    messagePrefix: '\x18Bitcoin Signed Message:\n',
+    messagePrefix: "\x18Bitcoin Signed Message:\n",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x6f,
     scriptHash: 0xc4,
@@ -120,7 +120,7 @@ module.exports = {
   // https://github.com/dashpay/dash/blob/master/src/validation.cpp
   // https://github.com/dashpay/dash/blob/master/src/chainparams.cpp
   dash: {
-    messagePrefix: '\x19DarkCoin Signed Message:\n',
+    messagePrefix: "\x19DarkCoin Signed Message:\n",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x4c,
     scriptHash: 0x10,
@@ -128,7 +128,7 @@ module.exports = {
     coin: coins.DASH
   },
   dashTest: {
-    messagePrefix: '\x19DarkCoin Signed Message:\n',
+    messagePrefix: "\x19DarkCoin Signed Message:\n",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x8c,
     scriptHash: 0x13,
@@ -139,8 +139,8 @@ module.exports = {
   // https://github.com/litecoin-project/litecoin/blob/master/src/validation.cpp
   // https://github.com/litecoin-project/litecoin/blob/master/src/chainparams.cpp
   litecoin: {
-    messagePrefix: '\x19Litecoin Signed Message:\n',
-    bech32: 'ltc',
+    messagePrefix: "\x19Litecoin Signed Message:\n",
+    bech32: "ltc",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x30,
     scriptHash: 0x32,
@@ -148,8 +148,8 @@ module.exports = {
     coin: coins.LTC
   },
   litecoinTest: {
-    messagePrefix: '\x19Litecoin Signed Message:\n',
-    bech32: 'tltc',
+    messagePrefix: "\x19Litecoin Signed Message:\n",
+    bech32: "tltc",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x6f,
     scriptHash: 0x3a,
@@ -159,7 +159,7 @@ module.exports = {
   // https://github.com/geekcash/geek/blob/master/src/validation.cpp
   // https://github.com/geekcash/geek/blob/master/src/chainparams.cpp
   geek: {
-    messagePrefix: 'GeekCash Signed Message:\n',
+    messagePrefix: "GeekCash Signed Message:\n",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x26,
     scriptHash: 0x13,
@@ -167,7 +167,7 @@ module.exports = {
     coin: coins.DASH
   },
   geekTest: {
-    messagePrefix: 'GeekCash Signed Message:\n',
+    messagePrefix: "GeekCash Signed Message:\n",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x26,
     scriptHash: 0x13,
@@ -178,7 +178,7 @@ module.exports = {
   // https://github.com/zcash/zcash/blob/master/src/validation.cpp
   // https://github.com/zcash/zcash/blob/master/src/chainparams.cpp
   zcash: {
-    messagePrefix: '\x18ZCash Signed Message:\n',
+    messagePrefix: "\x18ZCash Signed Message:\n",
     bip32: getDefaultBip32Mainnet(),
     pubKeyHash: 0x1cb8,
     scriptHash: 0x1cbd,
@@ -196,7 +196,7 @@ module.exports = {
     coin: coins.ZEC
   },
   zcashTest: {
-    messagePrefix: '\x18ZCash Signed Message:\n',
+    messagePrefix: "\x18ZCash Signed Message:\n",
     bip32: getDefaultBip32Testnet(),
     pubKeyHash: 0x1d25,
     scriptHash: 0x1cba,
