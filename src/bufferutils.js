@@ -1,17 +1,18 @@
 /* eslint-disable */
-const types = require('./types');
-const typeforce = require('typeforce');
-const varuint = require('varuint-bitcoin');
+const types = require("./types");
+const typeforce = require("typeforce");
+const varuint = require("varuint-bitcoin");
+
 // https://github.com/feross/buffer/blob/master/index.js#L1127
 function verifuint(value, max) {
-    if (typeof value !== 'number')
-        throw new Error('cannot write a non-number as a number');
+    if (typeof value !== "number")
+        throw new Error("cannot write a non-number as a number");
     if (value < 0)
-        throw new Error('specified a negative value for writing an unsigned value');
+        throw new Error("specified a negative value for writing an unsigned value");
     if (value > max)
-        throw new Error('RangeError: value out of range');
+        throw new Error("RangeError: value out of range");
     if (Math.floor(value) !== value)
-        throw new Error('value has a fractional component');
+        throw new Error("value has a fractional component");
 }
 function readUInt64LE(buffer, offset) {
     const a = buffer.readUInt32LE(offset);
@@ -66,7 +67,7 @@ class BufferWriter {
     }
     writeSlice(slice) {
         if (this.buffer.length < this.offset + slice.length) {
-            throw new Error('Cannot write slice out of bounds');
+            throw new Error("Cannot write slice out of bounds");
         }
         this.offset += slice.copy(this.buffer, this.offset);
     }
@@ -115,7 +116,7 @@ class BufferReader {
     }
     readSlice(n) {
         if (this.buffer.length < this.offset + n) {
-            throw new Error('Cannot read slice out of bounds');
+            throw new Error("Cannot read slice out of bounds");
         }
         const result = this.buffer.slice(this.offset, this.offset + n);
         this.offset += n;
