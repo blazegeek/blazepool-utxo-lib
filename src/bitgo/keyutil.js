@@ -7,13 +7,13 @@ const ECPair = require("../ecpair");
  * @param {Object} [network] - Network for the ECPair. Defaults to bitcoin.
  * @return {ECPair}
  */
-function privateKeyBufferToECPair (buffer, network) {
-  if (!Buffer.isBuffer(buffer) || buffer.length !== 32) {
-    throw new Error("invalid private key buffer");
-  }
+function privateKeyBufferToECPair(buffer, network) {
+	if (!Buffer.isBuffer(buffer) || buffer.length !== 32) {
+		throw new Error("invalid private key buffer");
+	}
 
-  const d = BigInteger.fromBuffer(buffer);
-  return new ECPair(d, null, { network });
+	const d = BigInteger.fromBuffer(buffer);
+	return new ECPair(d, null, { network });
 }
 
 /**
@@ -21,17 +21,17 @@ function privateKeyBufferToECPair (buffer, network) {
  * @param {ECPair} ecPair
  * @return {Buffer} 32 bytes
  */
-function privateKeyBufferFromECPair (ecPair) {
-  if (!(ecPair instanceof ECPair)) {
-    throw new TypeError(`invalid argument ecpair`);
-  }
+function privateKeyBufferFromECPair(ecPair) {
+	if (!(ecPair instanceof ECPair)) {
+		throw new TypeError(`invalid argument ecpair`);
+	}
 
-  if (!ecPair.d) throw new Error("Missing private key");
+	if (!ecPair.d) throw new Error("Missing private key");
 
-  return ecPair.d.toBuffer(32);
+	return ecPair.d.toBuffer(32);
 }
 
 module.exports = {
-  privateKeyBufferToECPair,
-  privateKeyBufferFromECPair
+	privateKeyBufferToECPair,
+	privateKeyBufferFromECPair,
 };
